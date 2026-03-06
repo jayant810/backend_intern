@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: auth
-          image: auth-service # Make sure to tag your image as this
+          image: auth-service:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 5000
           env:

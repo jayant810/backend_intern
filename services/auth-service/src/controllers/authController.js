@@ -68,6 +68,30 @@ exports.getMe = async (req, res) => {
   res.status(200).json({ success: true, data: user });
 };
 
+// @desc    Refresh token
+// @route   POST /api/v1/auth/refresh
+// @access  Public
+exports.refresh = async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(401).json({ success: false, message: 'No refresh token provided' });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'refresh_secret_123');
+    const user = await User.findByPk(decoded.id);
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User not found' });
+    }
+
+    sendTokenResponse(user, 200, res);
+  } catch (err) {
+    return res.status(401).json({ success: false, message: 'Invalid refresh token' });
+  }
+};
+
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   // Create Access Token

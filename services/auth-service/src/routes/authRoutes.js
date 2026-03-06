@@ -1,8 +1,29 @@
 const express = require('express');
-const { register, login, getMe } = require('../controllers/authController');
+const { register, login, getMe, refresh } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /api/v1/auth/refresh:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken: { type: string }
+ *     responses:
+ *       200:
+ *         description: New access token generated
+ */
+router.post('/refresh', refresh);
 
 /**
  * @swagger

@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: task
-          image: task-service # Make sure to tag your image as this
+          image: task-service:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 5000
           env:

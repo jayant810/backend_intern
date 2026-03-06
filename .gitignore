@@ -9,3 +9,4 @@ backend/node_modules/
 frontend/.env
 backend/.env
 minikube-linux-amd64
+minikube-linux-amd64

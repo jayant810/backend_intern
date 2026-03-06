@@ -4,10 +4,19 @@ const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
+const rateLimit = require('express-rate-limit');
+
 // Load env vars
 dotenv.config();
 
 const app = express();
+
+// Rate limiting
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 100
+});
+app.use('/api/v1/tasks', limiter);
 
 // Body parser
 app.use(express.json());
@@ -19,11 +28,9 @@ app.use(cors({
 }));
 
 // Route files
-const auth = require('./routes/authRoutes');
 const tasks = require('./routes/taskRoutes');
 
 // Mount routers
-app.use('/api/v1/auth', auth);
 app.use('/api/v1/tasks', tasks);
 
 // Basic home route

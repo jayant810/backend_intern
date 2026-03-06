@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: backend
-          image: backend-intern-backend # Make sure to tag your image as this
+          image: backend-intern-backend:latest # Make sure to tag your image as this
+          imagePullPolicy: Never
           ports:
             - containerPort: 5000
           env:
@@ -46,6 +47,10 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: DATABASE_URL
               value: "postgres://postgres:password@db:5432/backend_assessment"
+            - name: JWT_SECRET
+              value: "mysecretkey"
+            - name: JWT_EXPIRE
+              value: 7d
 ---
 apiVersion: v1
 kind: Service
@@ -55,9 +60,11 @@ metadata:
     app: backend-assessment
     component: backend
 spec:
+  type: NodePort
   ports:
     - port: 5000
       targetPort: 5000
+      nodePort: 30008
   selector:
     app: backend-assessment
     component: backend

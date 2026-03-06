@@ -13,7 +13,10 @@ const app = express();
 app.use(express.json());
 
 // Enable CORS
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    credentials: true
+}));
 
 // Route files
 const auth = require('./routes/authRoutes');

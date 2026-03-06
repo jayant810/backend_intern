@@ -19,12 +19,13 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: backend-intern-frontend # Make sure to tag your image as this
+          image: backend-intern-frontend:latest # Make sure to tag your image as this
+          imagePullPolicy: Never
           ports:
             - containerPort: 5173
           env:
             - name: VITE_API_BASE_URL
-              value: "http://localhost:5000/api/v1" # Adjust if using a LoadBalancer/Ingress
+              value: "http://192.168.49.2:30008/api/v1" # Adjust if using a LoadBalancer/Ingress
 ---
 apiVersion: v1
 kind: Service

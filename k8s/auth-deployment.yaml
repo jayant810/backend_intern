@@ -1,26 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-backend
+  name: auth-service
   labels:
     app: backend-assessment
-    component: backend
+    component: auth
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: backend-assessment
-      component: backend
+      component: auth
   template:
     metadata:
       labels:
         app: backend-assessment
-        component: backend
+        component: auth
     spec:
       containers:
-        - name: backend
-          image: backend-intern-backend:latest # Make sure to tag your image as this
-          imagePullPolicy: Never
+        - name: auth
+          image: auth-service # Make sure to tag your image as this
           ports:
             - containerPort: 5000
           env:
@@ -45,20 +44,18 @@ spec:
                 secretKeyRef:
                   name: db-secret
                   key: POSTGRES_PASSWORD
-            - name: DATABASE_URL
-              value: "postgres://postgres:password@db:5432/backend_assessment"
             - name: JWT_SECRET
-              value: "mysecretkey"
-            - name: JWT_EXPIRE
-              value: 7d
+              value: "secret_123"
+            - name: JWT_REFRESH_SECRET
+              value: "refresh_secret_123"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: auth-service
   labels:
     app: backend-assessment
-    component: backend
+    component: auth
 spec:
   type: NodePort
   ports:
@@ -67,4 +64,4 @@ spec:
       nodePort: 30008
   selector:
     app: backend-assessment
-    component: backend
+    component: auth

@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-service
+  labels:
+    app: backend-assessment
+    component: task
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-assessment
+      component: task
+  template:
+    metadata:
+      labels:
+        app: backend-assessment
+        component: task
+    spec:
+      containers:
+        - name: task
+          image: task-service # Make sure to tag your image as this
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+            - name: DB_HOST
+              value: "db"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_DB
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              value: "secret_123"
+            - name: REDIS_URL
+              value: "redis://redis:6379"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-service
+  labels:
+    app: backend-assessment
+    component: task
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30009
+  selector:
+    app: backend-assessment
+    component: task

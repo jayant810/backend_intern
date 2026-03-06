@@ -17,10 +17,12 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.20.0",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.7.0",
     "sequelize": "^6.37.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"

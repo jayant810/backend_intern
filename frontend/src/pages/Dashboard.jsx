@@ -28,14 +28,17 @@ const Dashboard = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await api.put(`/tasks/${editingId}`, { title, description, status });
+        const res = await api.put(`/tasks/${editingId}`, { title, description, status });
         toast.success('Task updated');
+        // Update local state instantly
+        setTasks(tasks.map(t => t.id === editingId ? res.data.data : t));
       } else {
-        await api.post('/tasks', { title, description, status });
+        const res = await api.post('/tasks', { title, description, status });
         toast.success('Task created');
+        // Add to local state instantly
+        setTasks([res.data.data, ...tasks]);
       }
       resetForm();
-      fetchTasks();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Action failed');
     }
@@ -46,6 +49,8 @@ const Dashboard = () => {
     setTitle(task.title);
     setDescription(task.description);
     setStatus(task.status);
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = async (id) => {
@@ -53,7 +58,8 @@ const Dashboard = () => {
       try {
         await api.delete(`/tasks/${id}`);
         toast.success('Task deleted');
-        fetchTasks();
+        // Update local state instantly
+        setTasks(tasks.filter(t => t.id !== id));
       } catch (err) {
         toast.error('Failed to delete task');
       }

@@ -22,6 +22,9 @@ services:
     container_name: auth_service
     ports:
       - "5001:5000"
+    volumes:
+      - ./services/auth-service:/app
+      - /app/node_modules
     environment:
       - DB_HOST=db
       - DB_USER=postgres
@@ -39,6 +42,9 @@ services:
     container_name: task_service
     ports:
       - "5002:5000"
+    volumes:
+      - ./services/task-service:/app
+      - /app/node_modules
     environment:
       - DB_HOST=db
       - DB_USER=postgres
@@ -57,8 +63,12 @@ services:
     container_name: react_frontend
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     environment:
-      - VITE_API_BASE_URL=http://localhost:5001/api/v1 # This is a temporary limitation as we split endpoints
+      - VITE_AUTH_API_URL=http://localhost:5001/api/v1
+      - VITE_TASK_API_URL=http://localhost:5002/api/v1
     depends_on:
       - auth-service
       - task-service

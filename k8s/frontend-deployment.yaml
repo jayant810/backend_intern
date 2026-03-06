@@ -23,6 +23,11 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 5173
+          env:
+            - name: VITE_AUTH_API_URL
+              value: "http://localhost:30008/api/v1" # Change localhost to your node IP if needed
+            - name: VITE_TASK_API_URL
+              value: "http://localhost:30009/api/v1" # Change localhost to your node IP if needed
 
 ---
 apiVersion: v1

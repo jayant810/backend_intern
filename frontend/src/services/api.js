@@ -1,23 +1,22 @@
 import axios from 'axios';
 
-// IMPORTANT: In a microservices architecture without an API Gateway, 
-// the frontend must know both service addresses.
-const VM_IP = '192.168.49.2';
-const AUTH_URL = `http://${VM_IP}:30008/api/v1`;
-const TASK_URL = `http://${VM_IP}:30009/api/v1`;
+// Use environment variables for API URLs, or fallback to localhost
+const AUTH_URL = import.meta.env.VITE_AUTH_API_URL || 'http://localhost:5001/api/v1';
+const TASK_URL = import.meta.env.VITE_TASK_API_URL || 'http://localhost:5002/api/v1';
 
 const api = axios.create();
 
 // Add a request interceptor to switch baseURL based on the path
 api.interceptors.request.use(
   (config) => {
-    // If the URL starts with /auth, send it to the Auth Service (Port 30008)
-    if (config.url.startsWith('/auth')) {
+    // Determine target service
+    if (config.url.includes('/auth')) {
       config.baseURL = AUTH_URL;
-    } 
-    // If the URL starts with /tasks, send it to the Task Service (Port 30009)
-    else if (config.url.startsWith('/tasks')) {
+    } else if (config.url.includes('/tasks')) {
       config.baseURL = TASK_URL;
+    } else {
+      // Default fallback
+      config.baseURL = AUTH_URL;
     }
 
     const token = localStorage.getItem('accessToken');

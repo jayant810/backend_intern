@@ -23,9 +23,6 @@ spec:
           imagePullPolicy: Never
           ports:
             - containerPort: 5173
-          env:
-            - name: VITE_API_BASE_URL
-              value: "http://192.168.49.2:30008/api/v1" # Points to Auth service NodePort
 
 ---
 apiVersion: v1
